@@ -15,6 +15,6 @@ app.get("/", function (req, res) {
 });
 
 // Setting the server to listen at port 3000
-app.listen(PORT, host, function (req, res) {
-  console.log("Server is running at port 3000");
+app.listen(PORT, function (req, res) {
+  console.log(`Server is running at port ${PORT}`);
 });
