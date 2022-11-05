@@ -7,6 +7,20 @@ app.use(express.json());
 
 const slackUsername = "Tana00";
 
+const additionSynonyms = [
+  "addition",
+  "add",
+  "adding",
+  "summation",
+  "totalling",
+  "total",
+  "plus",
+];
+
+const subtractionSynonyms = ["subtraction", "minus", "remove"];
+
+const multiplicationSynonyms = ["multiplication", "multiply"];
+
 // Defining get request at '/' route
 app.get("/", (req, res) => {
   res.json({
@@ -19,26 +33,42 @@ app.get("/", (req, res) => {
 
 // Defining post request at '/post' route
 app.post("/post", (req, res) => {
-  const operation_type = req.body.operation_type;
-  let x = Number(req.body.x);
+  const operation_type = req.body.operation_type.split(" ");
+  let x = Number(req?.body?.x);
   let y = Number(req.body.y);
+
   let result;
   let type = "addition" | "subtraction" | "multiplication";
 
-  if (["addition", "add"].includes(operation_type)) {
+  if (/[0-9]/.test(operation_type)) {
+    let numArr = [];
+    operation_type.map((e) => {
+      if (!isNaN(parseInt(e))) {
+        numArr.push(parseInt(e));
+      }
+    });
+    if (!x) {
+      x = numArr[0];
+    }
+    if (!y) {
+      y = numArr[1];
+    }
+  }
+
+  if (additionSynonyms.some((v) => operation_type.includes(v))) {
     result = x + y;
     type = "addition";
   }
-  if (["subtraction", "minus"].includes(operation_type)) {
+  if (subtractionSynonyms.some((v) => operation_type.includes(v))) {
     result = x - y;
     type = "subtraction";
   }
-  if (["multiplication"].includes(operation_type)) {
+  if (multiplicationSynonyms.some((v) => operation_type.includes(v))) {
     result = x * y;
     type = "multiplication";
   }
 
-  res.send({
+  res.status(200).send({
     slackUsername,
     result,
     operation_type: type,
