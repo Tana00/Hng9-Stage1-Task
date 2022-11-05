@@ -23,21 +23,25 @@ app.post("/post", (req, res) => {
   let x = Number(req.body.x);
   let y = Number(req.body.y);
   let result;
+  let type = "addition" | "subtraction" | "multiplication";
 
-  if (operation_type === "addition") {
+  if (["addition", "add"].includes(operation_type)) {
     result = x + y;
+    type = "addition";
   }
-  if (operation_type === "subtraction") {
+  if (["subtraction", "minus"].includes(operation_type)) {
     result = x - y;
+    type = "subtraction";
   }
-  if (operation_type === "multiplication") {
+  if (["multiplication"].includes(operation_type)) {
     result = x * y;
+    type = "multiplication";
   }
 
   res.send({
     slackUsername,
-    operation_type: req.body.operation_type,
     result,
+    operation_type: type,
   });
 });
 
